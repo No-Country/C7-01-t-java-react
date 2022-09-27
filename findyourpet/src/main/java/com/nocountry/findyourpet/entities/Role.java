@@ -10,8 +10,11 @@ import javax.persistence.*;
 public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
+    @Column(name = "id_role")
     private Long id;
+
+    @Column(nullable = false)
     private String name;
 
     private String description;
