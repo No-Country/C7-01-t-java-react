@@ -1,0 +1,63 @@
+package com.nocountry.findyourpet.entities;
+
+import lombok.Data;
+import org.hibernate.annotations.SQLDelete;
+import org.springframework.data.annotation.CreatedDate;
+
+import javax.persistence.*;
+import java.sql.Date;
+import java.sql.Timestamp;
+
+@Entity
+@Data
+@SQLDelete(sql = "UPDATE pet SET soft_delete = true WHERE id = ?")
+@Table(name = "pet")
+public class Pet {
+
+    @Id
+    @GeneratedValue
+    @Column(name = "id_pet")
+    private Long id;
+
+    @ManyToOne(targetEntity = User.class,fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_user", insertable = false, updatable = false)
+    private User user;
+
+    @Column(name = "id_user")
+    private String idUser;
+
+    private String name;
+    private String photo;
+    private Integer age;
+    private String description;
+    private String color;
+    /* Crear clase Zone
+
+    @ManyToOne(targetEntity = Zone.class,fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_zone", insertable = false, updatable = false)
+    private Zone zone;
+
+    @Column(name = "id_zone")
+    private String idZone;
+     */
+    @Column(nullable = false)
+    private String species;
+
+    private String sex;
+    private String size;
+    private Date date;
+
+    @Column(name = "soft_delete")
+    private Boolean softDelete;
+
+    @CreatedDate
+    @Column(columnDefinition = "create_On")
+    private Timestamp createOn;
+
+    private String state;
+    private String tail;
+    private String ears;
+
+
+
+}
