@@ -1,6 +1,6 @@
-package com.nocountry.findyourpet.repositories;
+package com.nocountry.findyourpet.repository;
 
-import com.nocountry.findyourpet.entities.Pet;
+import com.nocountry.findyourpet.models.entity.Pet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

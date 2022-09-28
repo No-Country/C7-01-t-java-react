@@ -1,4 +1,4 @@
-package com.nocountry.findyourpet.entities;
+package com.nocountry.findyourpet.models.entity;
 
 import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
