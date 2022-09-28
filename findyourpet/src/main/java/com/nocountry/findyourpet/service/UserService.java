@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 import static com.nocountry.findyourpet.utilities.Role.*;
 
 @Service
-public class UserService implements UserDetailsService {
+public class    UserService implements UserDetailsService {
 
 
     private final UserRepo userRepo;
