@@ -26,7 +26,6 @@ public class Pet {
 
     @Column(name = "id_user")
     private Long idUser;
-
     private String name;
     private String photo;
     private Integer age;
