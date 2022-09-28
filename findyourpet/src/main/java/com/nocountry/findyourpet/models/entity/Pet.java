@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,7 +25,7 @@ public class Pet {
     private User user;
 
     @Column(name = "id_user")
-    private String idUser;
+    private Long idUser;
 
     private String name;
     private String photo;
@@ -32,7 +33,8 @@ public class Pet {
     private String description;
     private String color;
 
-    private String ubicacion;
+    @Column(nullable = false)
+    private String location;
 
     @Column(nullable = false)
     private String species;
