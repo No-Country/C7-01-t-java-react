@@ -19,7 +19,7 @@ public class Comment {
     private Long id;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_pet", insertable = false , updatable = false)
-    private Pet pet;
+    private PetEntity petEntity;
     @Column(nullable = false)
     private String firstName;
     @Column(nullable = false)

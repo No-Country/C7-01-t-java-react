@@ -12,23 +12,26 @@ import java.sql.Timestamp;
 @Data
 @SQLDelete(sql = "UPDATE pet SET soft_delete = true WHERE id = ?")
 @Table(name = "pet")
-public class Pet {
+public class PetEntity {
 
     @Id
     @GeneratedValue
     @Column(name = "id_pet")
     private Long id;
 
-    @ManyToOne(targetEntity = UserEntity.class,fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_user", insertable = false, updatable = false)
-    private UserEntity user;
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private UserEntity owner;
 
-    @Column(name = "id_user")
-    private Long idUser;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String photo;
+    @Column(nullable = false)
     private Integer age;
+    @Column(nullable = false)
     private String description;
+    @Column(nullable = false)
     private String color;
 
     @Column(nullable = false)
@@ -36,9 +39,11 @@ public class Pet {
 
     @Column(nullable = false)
     private String species;
-
+    @Column(nullable = false)
     private String sex;
+    @Column(nullable = false)
     private String size;
+    @Column(nullable = false)
     private Date date;
 
     @Column(name = "soft_delete")
@@ -48,8 +53,9 @@ public class Pet {
     @Column(columnDefinition = "create_On")
     private Timestamp createOn;
 
-    private String state;
+    @Column(nullable = false)
     private String tail;
+    @Column(nullable = false)
     private String ears;
 
 
