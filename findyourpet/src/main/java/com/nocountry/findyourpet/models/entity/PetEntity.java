@@ -43,6 +43,7 @@ public class PetEntity {
     private String sex;
     @Column(nullable = false)
     private String size;
+
     @Column(nullable = false)
     private Date date;
 

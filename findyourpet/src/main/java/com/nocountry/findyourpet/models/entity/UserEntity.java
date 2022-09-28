@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 
 @Entity
@@ -31,6 +32,9 @@ public class UserEntity {
 
     @Column(nullable = false)
     private String lastName;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private List<PetEntity> pets;
 
     @Enumerated(EnumType.STRING)
     private Role role;
