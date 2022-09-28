@@ -1,7 +1,10 @@
 package com.nocountry.findyourpet.service;
 
 import com.nocountry.findyourpet.exceptions.MyException;
+import com.nocountry.findyourpet.models.entity.PetEntity;
 import com.nocountry.findyourpet.models.entity.UserEntity;
+import com.nocountry.findyourpet.models.request.UserRequest;
+import com.nocountry.findyourpet.repository.PetRepo;
 import com.nocountry.findyourpet.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,63 +33,66 @@ public class    UserService implements UserDetailsService {
 
 
     private final UserRepo userRepo;
+    private final PetRepo petRepo;
 
     @Autowired
-    public UserService(UserRepo userRepo) {
+    public UserService(UserRepo userRepo, PetRepo petRepo) {
         this.userRepo = userRepo;
+        this.petRepo = petRepo;
     }
-
 
     @Transactional
-    public void register(String email,
-                         String pass,
-                         String pass2,
-                         String name ,
-                         String lastName ,
-                         String phone ,
-                         String facebookAccount
-                         ) throws MyException{
+    public void addPetToList(Long idPet, String email){
+        UserEntity user = userRepo.findByEmail(email);
+        List<PetEntity> pets = user.getPets();
 
-        validation(email, pass, pass2, name,lastName,phone);
-        UserEntity us = new UserEntity();
-
-        us.setPassword(new BCryptPasswordEncoder().encode(pass));
-        us.setEmail(email);
-        us.setName(name);
-        us.setLastName(lastName);
-        us.setPhone(phone);
-        us.setFacebookAccount(facebookAccount);
-        us.setRole(USER);
-
-        userRepo.save(us);
+        Optional<PetEntity> response = petRepo.findById(idPet);
+        if(response.isPresent()){
+            pets.add(response.get());
+            user.setPets(pets);
+            userRepo.save(user);
+        }
     }
 
-    public void validation(String email,
-                           String pass,
-                           String pass2,
-                           String name,
-                           String lastName,
-                           String phone) throws MyException {
+    @Transactional
+    public void register(UserRequest userRequest) throws MyException{
 
-        if (name == null || name.isEmpty()) {
+        validation(userRequest);
+        UserEntity user = new UserEntity();
+
+        user.setPassword(new BCryptPasswordEncoder().encode(userRequest.getPass()));
+        user.setEmail(userRequest.getEmail());
+        user.setName(userRequest.getName());
+        user.setLastName(userRequest.getLastName());
+        user.setPhone(userRequest.getPhone());
+        user.setFacebookAccount(userRequest.getFacebookAccount());
+        user.setRole(USER);
+        user.setSoftDelete(false);
+
+        userRepo.save(user);
+    }
+
+    public void validation(UserRequest user) throws MyException {
+
+        if (user.getName() == null || user.getName() .isEmpty()) {
             throw new MyException("El nombre no puede estar vacio");
         }
-        if (lastName == null || lastName.isEmpty()) {
+        if (user.getLastName() == null || user.getLastName().isEmpty()) {
             throw new MyException("El apellido no puede estar vacio");
         }
-        if (phone == null || phone.isEmpty()) {
+        if (user.getPhone() == null || user.getPhone().isEmpty()) {
             throw new MyException("El numero de telefono no puede estar vacio");
         }
-        if (pass == null || pass.isEmpty() || pass.length()<5) {
+        if (user.getPass() == null || user.getPass().isEmpty() || user.getPass().length()<5) {
             throw new MyException("El password no puede estar vacio y contener minimo 5 digitos");
         }
-        if (!pass2.equals(pass)) {
+        if (!user.getPass2().equals(user.getPass())) {
             throw new MyException("Las contraseñas deben ser iguales");
         }
         //validacion de mail
         String regex = "^(.+)@(.+)$";
         Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(email);
+        Matcher matcher = pattern.matcher(user.getEmail());
         if (!matcher.matches()) {
             throw new MyException("Ingrese un mail valido");
         }
