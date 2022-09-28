@@ -1,5 +1,6 @@
 package com.nocountry.findyourpet.models.entity;
 
+import com.nocountry.findyourpet.utilities.Role;
 import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedDate;
@@ -12,7 +13,7 @@ import java.sql.Timestamp;
 @Data
 @SQLDelete(sql = "UPDATE user SET soft_delete = true WHERE id = ?")
 @Table(name = "user")
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue
@@ -31,12 +32,8 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
-    @ManyToOne(targetEntity = Role.class,fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_role", insertable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
-
-    @Column(name = "id_role")
-    private String idRole;
 
     @Column(nullable = false)
     private String phone;
@@ -49,4 +46,5 @@ public class User {
     @CreatedDate
     @Column(columnDefinition = "create_On")
     private Timestamp createOn;
+
 }

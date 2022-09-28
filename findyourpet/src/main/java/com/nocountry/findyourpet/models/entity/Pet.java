@@ -7,7 +7,6 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Entity
 @Data
@@ -20,9 +19,9 @@ public class Pet {
     @Column(name = "id_pet")
     private Long id;
 
-    @ManyToOne(targetEntity = User.class,fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = UserEntity.class,fetch = FetchType.EAGER)
     @JoinColumn(name = "id_user", insertable = false, updatable = false)
-    private User user;
+    private UserEntity user;
 
     @Column(name = "id_user")
     private Long idUser;
