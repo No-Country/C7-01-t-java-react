@@ -31,15 +31,9 @@ public class Pet {
     private Integer age;
     private String description;
     private String color;
-    /* Crear clase Zone
 
-    @ManyToOne(targetEntity = Zone.class,fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_zone", insertable = false, updatable = false)
-    private Zone zone;
+    private String ubicacion;
 
-    @Column(name = "id_zone")
-    private String idZone;
-     */
     @Column(nullable = false)
     private String species;
 
