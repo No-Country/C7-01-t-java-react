@@ -39,18 +39,39 @@ public class PetService {
         pe.setDate(petRequest.getDate());
         pe.setTail(petRequest.getTails());
         pe.setEars(petRequest.getEars());
-
        //validacion de si pertenece a un dueño
         pe.setOwner(findOwner(idUser));
-
         petRepo.save(pe);
+    }
+    @Transactional
+    public void modify(PetRequest petRequest,Long idPet) throws MyException {
+        validation(petRequest);
+        //se busca si la mascota esta en la base de datos
+        Optional<PetEntity> response = petRepo.findById(idPet);
+        if (response.isPresent()){
+            PetEntity pe = response.get();
+            pe.setName(petRequest.getName());
+            pe.setPhoto(petRequest.getPhoto());
+            pe.setAge(petRequest.getAge());
+            pe.setDescription(petRequest.getDescription());
+            pe.setColor(petRequest.getColor());
+            pe.setLocation(petRequest.getLocation());
+            pe.setName(petRequest.getName());
+            pe.setSpecies(petRequest.getSpecies());
+            pe.setSex(petRequest.getSex());
+            pe.setSize(petRequest.getSize());
+            pe.setDate(petRequest.getDate());
+            pe.setTail(petRequest.getTails());
+            pe.setEars(petRequest.getEars());
 
-
-
+            petRepo.save(pe);
+        } else {
+            throw new MyException("No se encuentra la mascota en la base");
+        }
 
     }
 
-    //debo tener long de pet id para verificar a su dueño
+    //debo tener long de user id para verificar a su dueño
     public UserEntity findOwner(Long idUser) throws MyException {
 
         Optional<UserEntity> response = userRepo.findById(idUser);
@@ -59,7 +80,7 @@ public class PetService {
             UserEntity owner = response.get();
             return owner;
         } else {
-            throw new MyException("El id no corresponde al del dueño");
+            throw new MyException("El id no corresponde al un usuario");
         }
 
 
