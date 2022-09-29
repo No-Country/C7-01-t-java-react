@@ -45,7 +45,7 @@ public class PetEntity {
     private String size;
 
     @Column(nullable = false)
-    private Date date;
+    private String date;
 
     @Column(name = "soft_delete")
     private Boolean softDelete;

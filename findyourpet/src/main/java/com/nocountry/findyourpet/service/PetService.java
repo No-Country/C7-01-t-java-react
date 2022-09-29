@@ -3,22 +3,25 @@ package com.nocountry.findyourpet.service;
 
 import com.nocountry.findyourpet.exceptions.MyException;
 import com.nocountry.findyourpet.models.entity.PetEntity;
+import com.nocountry.findyourpet.models.entity.UserEntity;
 import com.nocountry.findyourpet.models.request.PetRequest;
 import com.nocountry.findyourpet.repository.PetRepo;
+import com.nocountry.findyourpet.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.Date;
+import java.util.Optional;
 
 @Service
 public class PetService {
 
     @Autowired
     private PetRepo petRepo;
-
+    @Autowired
+    private UserRepo userRepo;
     @Transactional
-    public void register(PetRequest petRequest) throws MyException {
+    public void register(PetRequest petRequest,Long idUser) throws MyException {
 
         validation(petRequest);
         PetEntity pe = new PetEntity();
@@ -33,15 +36,31 @@ public class PetService {
         pe.setSpecies(petRequest.getSpecies());
         pe.setSex(petRequest.getSex());
         pe.setSize(petRequest.getSize());
-        //pe.setDate(); //ver por la fecha de perdido
+        pe.setDate(petRequest.getDate());
         pe.setTail(petRequest.getTails());
         pe.setEars(petRequest.getEars());
 
-       //realizar validacion de si pertenece a un dueño en otro metodo
+       //validacion de si pertenece a un dueño
+        pe.setOwner(findOwner(idUser));
 
         petRepo.save(pe);
 
 
+
+
+    }
+
+    //debo tener long de pet id para verificar a su dueño
+    public UserEntity findOwner(Long idUser) throws MyException {
+
+        Optional<UserEntity> response = userRepo.findById(idUser);
+
+        if (response.isPresent()){
+            UserEntity owner = response.get();
+            return owner;
+        } else {
+            throw new MyException("El id no corresponde al del dueño");
+        }
 
 
     }
