@@ -15,6 +15,6 @@ public class PetRequest {
     private String sex;
     private String size;
     private String date;
-    private String tails;
+    private String tail;
     private String ears;
 }

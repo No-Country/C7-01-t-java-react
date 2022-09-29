@@ -5,12 +5,16 @@ import com.nocountry.findyourpet.exceptions.MyException;
 import com.nocountry.findyourpet.models.entity.PetEntity;
 import com.nocountry.findyourpet.models.entity.UserEntity;
 import com.nocountry.findyourpet.models.request.PetRequest;
+import com.nocountry.findyourpet.models.response.PetResponse;
 import com.nocountry.findyourpet.repository.PetRepo;
 import com.nocountry.findyourpet.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,11 +25,11 @@ public class PetService {
     @Autowired
     private UserRepo userRepo;
     @Transactional
-    public void register(PetRequest petRequest,Long idUser) throws MyException {
+    public PetEntity register(PetRequest petRequest,Long idUser) throws MyException {
 
         validation(petRequest);
         PetEntity pe = new PetEntity();
-
+        pe.setOwner(findOwner(idUser));
         pe.setName(petRequest.getName());
         pe.setPhoto(petRequest.getPhoto());
         pe.setAge(petRequest.getAge());
@@ -37,14 +41,13 @@ public class PetService {
         pe.setSex(petRequest.getSex());
         pe.setSize(petRequest.getSize());
         pe.setDate(petRequest.getDate());
-        pe.setTail(petRequest.getTails());
+        pe.setTail(petRequest.getTail());
         pe.setEars(petRequest.getEars());
-       //validacion de si pertenece a un dueño
-        pe.setOwner(findOwner(idUser));
         petRepo.save(pe);
+        return pe;
     }
     @Transactional
-    public void modify(PetRequest petRequest,Long idPet) throws MyException {
+    public PetEntity modify(PetRequest petRequest,Long idPet) throws MyException {
         validation(petRequest);
         //se busca si la mascota esta en la base de datos
         Optional<PetEntity> response = petRepo.findById(idPet);
@@ -61,17 +64,45 @@ public class PetService {
             pe.setSex(petRequest.getSex());
             pe.setSize(petRequest.getSize());
             pe.setDate(petRequest.getDate());
-            pe.setTail(petRequest.getTails());
+            pe.setTail(petRequest.getTail());
             pe.setEars(petRequest.getEars());
 
             petRepo.save(pe);
+            return pe;
         } else {
             throw new MyException("No se encuentra la mascota en la base");
+
         }
 
     }
 
-    //debo tener long de user id para verificar a su dueño
+    //metodo para listar mascotas
+    @Transactional(readOnly = true)
+    public List<PetResponse> getAll(){
+        List<PetEntity> listPets = petRepo.findAll();
+        List<PetResponse> listPetsResponse = new ArrayList<>();
+
+        for (PetEntity aux: listPets) {
+            PetResponse response = new PetResponse();
+            response.setName(aux.getName());
+            response.setPhoto(aux.getPhoto());
+            response.setAge(aux.getAge());
+            response.setDescription(aux.getDescription());
+            response.setColor(aux.getColor());
+            response.setLocation(aux.getLocation());
+            response.setSpecies(aux.getSpecies());
+            response.setSex(aux.getSex());
+            response.setSize(aux.getSize());
+            response.setDate(aux.getDate());
+            response.setTail(aux.getTail());
+            response.setEars(aux.getEars());
+            listPetsResponse.add(response);
+        }
+        return listPetsResponse;
+    }
+
+
+    @Transactional(readOnly = true)
     public UserEntity findOwner(Long idUser) throws MyException {
 
         Optional<UserEntity> response = userRepo.findById(idUser);
@@ -80,13 +111,11 @@ public class PetService {
             UserEntity owner = response.get();
             return owner;
         } else {
-            throw new MyException("El id no corresponde al un usuario");
+            throw new MyException("El id no corresponde a un usuario");
         }
 
 
     }
-
-
     private void validation(PetRequest petRequest) throws MyException {
           if (petRequest.getName().isEmpty() || petRequest.getName() == null){
               throw new MyException("El nombre no puede estar vacio ni ser nulo");
@@ -118,7 +147,7 @@ public class PetService {
         if (petRequest.getDate() == null){
             throw new MyException("Debe colocar una fecha");
         }
-        if (petRequest.getTails().isEmpty() || petRequest.getTails() == null){
+        if (petRequest.getTail().isEmpty() || petRequest.getTail() == null){
             throw new MyException("Debe colocar tipo de cola");
         }
         if (petRequest.getEars().isEmpty() || petRequest.getEars() == null){
