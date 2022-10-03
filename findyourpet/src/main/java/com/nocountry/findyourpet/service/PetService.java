@@ -4,6 +4,7 @@ package com.nocountry.findyourpet.service;
 import com.nocountry.findyourpet.exceptions.MyException;
 import com.nocountry.findyourpet.models.entity.PetEntity;
 import com.nocountry.findyourpet.models.entity.UserEntity;
+import com.nocountry.findyourpet.models.mapper.PetMapper;
 import com.nocountry.findyourpet.models.request.PetRequest;
 import com.nocountry.findyourpet.models.response.PetResponse;
 import com.nocountry.findyourpet.repository.PetRepo;
@@ -24,30 +25,20 @@ public class PetService {
     private PetRepo petRepo;
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private PetMapper petMapper;
     @Transactional
-    public PetEntity register(PetRequest petRequest,Long idUser) throws MyException {
+    public PetResponse register(PetRequest petRequest,Long idUser) throws MyException {
 
         validation(petRequest);
-        PetEntity pe = new PetEntity();
+        PetEntity pe = petMapper.entity(petRequest);
         pe.setOwner(findOwner(idUser));
-        pe.setName(petRequest.getName());
-        pe.setPhoto(petRequest.getPhoto());
-        pe.setAge(petRequest.getAge());
-        pe.setDescription(petRequest.getDescription());
-        pe.setColor(petRequest.getColor());
-        pe.setLocation(petRequest.getLocation());
-        pe.setName(petRequest.getName());
-        pe.setSpecies(petRequest.getSpecies());
-        pe.setSex(petRequest.getSex());
-        pe.setSize(petRequest.getSize());
-        pe.setDate(petRequest.getDate());
-        pe.setTail(petRequest.getTail());
-        pe.setEars(petRequest.getEars());
         petRepo.save(pe);
-        return pe;
+        PetResponse response = petMapper.response(pe);
+        return response;
     }
     @Transactional
-    public PetEntity modify(PetRequest petRequest,Long idPet) throws MyException {
+    public PetResponse modify(PetRequest petRequest,Long idPet) throws MyException {
         validation(petRequest);
         //se busca si la mascota esta en la base de datos
         Optional<PetEntity> response = petRepo.findById(idPet);
@@ -59,19 +50,18 @@ public class PetService {
             pe.setDescription(petRequest.getDescription());
             pe.setColor(petRequest.getColor());
             pe.setLocation(petRequest.getLocation());
-            pe.setName(petRequest.getName());
             pe.setSpecies(petRequest.getSpecies());
             pe.setSex(petRequest.getSex());
             pe.setSize(petRequest.getSize());
             pe.setDate(petRequest.getDate());
             pe.setTail(petRequest.getTail());
             pe.setEars(petRequest.getEars());
-
             petRepo.save(pe);
-            return pe;
+
+            PetResponse petResponse = petMapper.response(pe);
+            return petResponse;
         } else {
             throw new MyException("No se encuentra la mascota en la base");
-
         }
 
     }
@@ -83,19 +73,7 @@ public class PetService {
         List<PetResponse> listPetsResponse = new ArrayList<>();
 
         for (PetEntity aux: listPets) {
-            PetResponse response = new PetResponse();
-            response.setName(aux.getName());
-            response.setPhoto(aux.getPhoto());
-            response.setAge(aux.getAge());
-            response.setDescription(aux.getDescription());
-            response.setColor(aux.getColor());
-            response.setLocation(aux.getLocation());
-            response.setSpecies(aux.getSpecies());
-            response.setSex(aux.getSex());
-            response.setSize(aux.getSize());
-            response.setDate(aux.getDate());
-            response.setTail(aux.getTail());
-            response.setEars(aux.getEars());
+            PetResponse response = petMapper.response(aux);
             listPetsResponse.add(response);
         }
         return listPetsResponse;
