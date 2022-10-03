@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export default function Header() {
     return (
@@ -14,8 +15,8 @@ export default function Header() {
                             <div className="col-sm-4 offset-md-1 py-4">
                                 <h4 className="text-white">Dejenos ayudarle</h4>
                                 <ul className="list-unstyled">
-                                    <li><a href="#" className="text-white">Iniciar Sesion</a></li>
-                                    <li><a href="#" className="text-white">Registrarse</a></li>
+                                    <li><Link to={"/login"} className="text-white">Iniciar Sesion</Link></li>
+                                    <li><Link to={"/user-form"} className="text-white">Registrarse</Link></li>
                                 </ul>
                             </div>
                         </div>

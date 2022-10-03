@@ -2,7 +2,7 @@ import React from 'react'
 
 export const Main = () => {
     return (
-        <div id="containerMain">
+        <div className="containerMain">
             <main>
                 <section className="py-5 text-center container">
                     <div className="row py-lg-5">

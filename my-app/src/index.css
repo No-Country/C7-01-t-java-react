@@ -10,7 +10,12 @@ body {
 #navBarPrincipal{
   background-color: #fca732;
 }
-#containerMain{
+
+.transparent-input {
+  background-color:transparent !important;
+  border:none !important;
+}
+.containerMain{
   background-image: url(../public/fondoPrincipal.png);
   background-size: 100% auto;
   background-position: center top;
