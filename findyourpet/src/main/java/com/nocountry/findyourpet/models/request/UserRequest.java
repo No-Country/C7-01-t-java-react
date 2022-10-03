@@ -6,10 +6,11 @@ import lombok.Data;
 public class UserRequest {
 
     private String email;
-    private String pass;
-    private String pass2;
+    private String password;
+    private String password2;
     private String name ;
     private String lastName;
     private String phone;
     private String facebookAccount;
+
 }

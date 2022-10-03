@@ -1,9 +1,12 @@
 package com.nocountry.findyourpet.models.entity;
 
 import com.nocountry.findyourpet.utilities.Role;
+
+
 import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -33,6 +36,7 @@ public class UserEntity {
     @Column(nullable = false)
     private String lastName;
 
+    @Nullable
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<PetEntity> pets;
 
