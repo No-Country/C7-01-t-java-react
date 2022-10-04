@@ -1,41 +1,33 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Login = () => {
     return (
-        <div className="containerMain py-5 ">
+        <div className="containerMain">
             <div className="row justify-content-between">
                 <br></br>
             </div>
-            <div className="row justify-content-between">
-                <div className="container col-5 py-5 bg-danger bg-opacity-50 rounded-4">
-                    <form className="">
-                        <div className="form-group">
-                            <label htmlFor="exampleFormControlInput1">Email address</label>
+            <div className="row ">
+                <div className="container col-4 bg-danger bg-opacity-50 rounded-4">
+                    <form className="row g-3 py-5">
+                    <h1 className="fw-bold text-center ">Iniciar Sesion</h1>
+                        <div className="mb-4">
+                            <label className="form-label">Usuario</label>
                             <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com" />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="exampleFormControlSelect1">Example select</label>
-                            <select className="form-control" id="exampleFormControlSelect1">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
+
+                        <div className="mb-4">
+                            <label className="form-label">Contraseña</label>
+                            <input type="password" className="form-control" id="exampleFormControlInput1"  />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="exampleFormControlSelect2">Example multiple select</label>
-                            <select multiple className="form-control" id="exampleFormControlSelect2">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
+
+                        <div className="d-grid">
+                            <button type="submit" className="button2">Acceder</button>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="exampleFormControlTextarea1">Example textarea</label>
-                            <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        <div className="my-3">
+                            <span>No tienes cuenta? <Link to={"/user-form"}>Registrarse</Link></span><br/>
+                            <span>Recuperar Contraseña</span><br/>
+
                         </div>
                     </form>
                 </div>
