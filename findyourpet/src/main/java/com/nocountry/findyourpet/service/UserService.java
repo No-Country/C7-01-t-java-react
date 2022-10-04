@@ -84,7 +84,6 @@ public class UserService implements UserDetailsService {
         }
 
     }
-
     private void validation(UserRequest user) throws MyException {
 
         if (user.getName() == null || user.getName() .isEmpty()) {

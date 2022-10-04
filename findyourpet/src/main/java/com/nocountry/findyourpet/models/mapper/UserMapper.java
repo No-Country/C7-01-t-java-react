@@ -4,7 +4,6 @@ package com.nocountry.findyourpet.models.mapper;
 import com.nocountry.findyourpet.models.entity.UserEntity;
 import com.nocountry.findyourpet.models.request.UserRequest;
 import com.nocountry.findyourpet.models.response.UserResponse;
-import org.apache.catalina.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import static com.nocountry.findyourpet.utilities.Role.*;

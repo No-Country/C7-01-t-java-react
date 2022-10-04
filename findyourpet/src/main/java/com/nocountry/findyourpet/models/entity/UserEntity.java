@@ -1,11 +1,13 @@
 package com.nocountry.findyourpet.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nocountry.findyourpet.utilities.Role;
 
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -14,36 +16,33 @@ import java.util.List;
 
 
 @Entity
-@Data
+@Getter
+@Setter
 @SQLDelete(sql = "UPDATE user SET soft_delete = true WHERE id = ?")
 @Table(name = "user")
 public class UserEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id_user")
     private Long id;
 
-    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private String lastName;
 
     @Nullable
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<PetEntity> pets;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(nullable = false)
     private String phone;
 
     private String facebookAccount;
@@ -51,8 +50,7 @@ public class UserEntity {
     @Column(name = "soft_delete")
     private Boolean softDelete;
 
-    @CreatedDate
-    @Column(columnDefinition = "create_On")
+    @CreationTimestamp
     private Timestamp createOn;
 
 }

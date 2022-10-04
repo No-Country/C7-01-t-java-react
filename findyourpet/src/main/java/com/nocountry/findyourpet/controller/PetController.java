@@ -28,7 +28,7 @@ public class PetController {
             PetResponse response = petService.register(petRequest, idUser);
             return ResponseEntity.ok(response);
         } catch (MyException e) {
-            e.getMessage();
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -39,7 +39,7 @@ public class PetController {
             PetResponse response = petService.modify(petRequest,petId);
             return ResponseEntity.ok(response);
         } catch (MyException e) {
-            e.getMessage();
+            System.out.println(e.getMessage());
             return null;
         }
     }
