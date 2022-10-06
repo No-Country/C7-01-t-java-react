@@ -6,13 +6,11 @@ import com.nocountry.findyourpet.models.response.UserResponse;
 import com.nocountry.findyourpet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -23,6 +21,7 @@ public class UserController {
         //para realizar el registro le tengo que entregar un jwt token a cada usuario
         try {
             UserResponse response = userService.register(request);
+            System.out.println(response);
             return ResponseEntity.ok(response);
         } catch (MyException e) {
             System.out.println(e.getMessage());
