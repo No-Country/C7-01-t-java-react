@@ -9,6 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+<<<<<<< HEAD
+=======
+@RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:3000")
+>>>>>>> e180d02dc5beae6cd9543b3fc35735d9d1b96c66
 public class UserController {
 
     @Autowired
@@ -19,6 +24,7 @@ public class UserController {
         //para realizar el registro le tengo que entregar un jwt token a cada usuario
         try {
             UserResponse response = userService.register(request);
+            System.out.println(response);
             return ResponseEntity.ok(response);
         } catch (MyException e) {
             System.out.println(e.getMessage());
