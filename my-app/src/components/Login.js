@@ -23,10 +23,8 @@ const Login = () => {
 
     return (
         <div className="containerMain">
-            <div className="row justify-content-between">
-                <br></br>
-            </div>
-            <div className="row ">
+
+            <div className="row p-5 align-items-center justify-content-center">
                 <div className="container col-4 bg-danger bg-opacity-50 rounded-4">
                     <form className="row g-3 py-5" onSubmit={handleSubmit}>
                     <h1 className="fw-bold text-center ">Iniciar Sesion</h1>

@@ -33,11 +33,9 @@ export const Register = () => {
 
   return (
     <div className="containerMain">
-      <div className="row py-4">
-        <br></br>
-      </div>
-      <div className="row p-4">
-        <div className="col-8 bg-danger bg-opacity-50 rounded-4">
+      
+      <div className="row p-5 align-items-center justify-content-center">
+        <div className="col-6 bg-danger bg-opacity-50 rounded-4">
           <form className="row g-3 py-5" onSubmit={handleSubmit}>
             <h1 className="fw-bold text-center ">Ingrese sus datos</h1>
             <div className="mb-2 col-4">
