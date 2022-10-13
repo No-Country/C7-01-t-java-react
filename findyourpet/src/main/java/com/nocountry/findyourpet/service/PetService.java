@@ -10,6 +10,8 @@ import com.nocountry.findyourpet.models.response.PetResponse;
 import com.nocountry.findyourpet.repository.PetRepo;
 import com.nocountry.findyourpet.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,17 +30,17 @@ public class PetService {
     @Autowired
     private PetMapper petMapper;
     @Transactional
-    public PetResponse register(PetRequest petRequest,Long idUser) throws MyException {
+    public ResponseEntity<?> register(PetRequest petRequest, Long idUser) throws MyException {
 
         validation(petRequest);
         PetEntity pe = petMapper.entity(petRequest);
         pe.setOwner(findOwner(idUser));
         petRepo.save(pe);
-        PetResponse response = petMapper.response(pe);
-        return response;
+
+        return new ResponseEntity<>("pet registred successfully" , HttpStatus.OK);
     }
     @Transactional
-    public PetResponse modify(PetRequest petRequest,Long idPet) throws MyException {
+    public ResponseEntity<?> modify(PetRequest petRequest,Long idPet) throws MyException {
         validation(petRequest);
         //se busca si la mascota esta en la base de datos
         Optional<PetEntity> response = petRepo.findById(idPet);
@@ -58,10 +60,9 @@ public class PetService {
             pe.setEars(petRequest.getEars());
             petRepo.save(pe);
 
-            PetResponse petResponse = petMapper.response(pe);
-            return petResponse;
+            return new ResponseEntity<>("succesfully modified" , HttpStatus.OK);
         } else {
-            throw new MyException("No se encuentra la mascota en la base");
+            return new ResponseEntity<>("id not found in database" , HttpStatus.NOT_FOUND);
         }
 
     }

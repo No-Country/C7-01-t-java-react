@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/pet")
+@CrossOrigin(origins = "http://localhost:3000")
 public class PetController {
     @Autowired
     private PetService petService;
@@ -23,21 +24,19 @@ public class PetController {
     }
 
     @PostMapping("/{idUser}/register")
-    public ResponseEntity<PetResponse> registerPet(@RequestBody PetRequest petRequest ,@PathVariable Long idUser){
+    public ResponseEntity<?> registerPet(@RequestBody PetRequest petRequest ,@PathVariable Long idUser){
         try {
-            PetResponse response = petService.register(petRequest, idUser);
-            return ResponseEntity.ok(response);
+            return petService.register(petRequest,idUser);
         } catch (MyException e) {
             System.out.println(e.getMessage());
             return null;
         }
     }
 
-    @PutMapping("/modify/{id}")
-    public ResponseEntity<PetResponse> modifyPet(@PathVariable Long petId, @RequestBody PetRequest petRequest){
+    @PutMapping("/{id}")
+    public ResponseEntity<?> modifyPet(@PathVariable Long petId, @RequestBody PetRequest petRequest){
         try {
-            PetResponse response = petService.modify(petRequest,petId);
-            return ResponseEntity.ok(response);
+            return petService.modify(petRequest , petId);
         } catch (MyException e) {
             System.out.println(e.getMessage());
             return null;

@@ -4,11 +4,15 @@ import com.nocountry.findyourpet.exceptions.MyException;
 import com.nocountry.findyourpet.models.entity.PetEntity;
 import com.nocountry.findyourpet.models.entity.UserEntity;
 import com.nocountry.findyourpet.models.mapper.UserMapper;
+import com.nocountry.findyourpet.models.request.LoginRequest;
 import com.nocountry.findyourpet.models.request.UserRequest;
+import com.nocountry.findyourpet.models.response.LoginResponse;
 import com.nocountry.findyourpet.models.response.UserResponse;
 import com.nocountry.findyourpet.repository.PetRepo;
 import com.nocountry.findyourpet.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -42,28 +46,49 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void addPetToList(Long idPet, String email){
-        UserEntity user = userRepo.findByEmail(email);
-        List<PetEntity> pets = user.getPets();
+        Optional<UserEntity> response = userRepo.findByEmail(email);
+        if (response.isPresent()){
+          UserEntity user = response.get();
+          List<PetEntity> pets = user.getPets();
 
-        Optional<PetEntity> response = petRepo.findById(idPet);
-        if(response.isPresent()){
-            pets.add(response.get());
-            user.setPets(pets);
-            userRepo.save(user);
+          Optional<PetEntity> response2 = petRepo.findById(idPet);
+            if(response2.isPresent()){
+                pets.add(response2.get());
+                user.setPets(pets);
+                userRepo.save(user);
+            }
         }
+
     }
 
     @Transactional
-    public UserResponse register(UserRequest userRequest) throws MyException{
+    public ResponseEntity<?> register(UserRequest userRequest) throws MyException{
         validation(userRequest);
         UserEntity user = userMapper.entity(userRequest);
         userRepo.save(user);
-        UserResponse response= userMapper.responseEntity(user);
-        return response;
+        return new ResponseEntity<>("user registred succesfully" , HttpStatus.OK);
     }
 
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> login(LoginRequest request){
+        Optional<UserEntity> entity = userRepo.findByEmail(request.getEmail());
+
+        if (entity.isPresent()){
+            LoginResponse response = new LoginResponse();
+            response.setEmail(entity.get().getEmail());
+            response.setName(entity.get().getName());
+            response.setOk(true);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("incorrect email or password" , HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+
     @Transactional
-    public UserResponse modify(UserRequest request, Long userId) throws MyException {
+    public ResponseEntity<?> modify(UserRequest request, Long userId) throws MyException {
         Optional<UserEntity> findEntity = userRepo.findById(userId);
         if (findEntity.isPresent()){
             validation(request);
@@ -77,42 +102,41 @@ public class UserService implements UserDetailsService {
             entity.setFacebookAccount(request.getFacebookAccount());
 
             userRepo.save(entity);
-            UserResponse response = userMapper.responseEntity(entity);
-            return response;
+            return new ResponseEntity<>("successfully modified" , HttpStatus.OK);
         } else {
-            throw new MyException("No se encuentra el id en la base de datos");
+            return new ResponseEntity<>("id not found in database" , HttpStatus.NOT_FOUND);
         }
-
     }
     private void validation(UserRequest user) throws MyException {
 
         if (user.getName() == null || user.getName() .isEmpty()) {
-            throw new MyException("El nombre no puede estar vacio");
+            throw new MyException("name is not empty");
         }
         if (user.getLastName() == null || user.getLastName().isEmpty()) {
-            throw new MyException("El apellido no puede estar vacio");
+            throw new MyException("lastname is not empty");
         }
         if (user.getPhone() == null || user.getPhone().isEmpty()) {
-            throw new MyException("El numero de telefono no puede estar vacio");
+            throw new MyException("phone is not empty");
         }
         if (user.getPassword() == null || user.getPassword().isEmpty() || user.getPassword().length()<5) {
-            throw new MyException("El password no puede estar vacio y contener minimo 5 digitos");
+            throw new MyException("password is not empty and must contain 5 digits");
         }
         if (!user.getPassword2().equals(user.getPassword())) {
-            throw new MyException("Las contraseñas deben ser iguales");
+            throw new MyException("password are equals");
         }
         //validacion de mail
         String regex = "^(.+)@(.+)$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(user.getEmail());
         if (!matcher.matches()) {
-            throw new MyException("Ingrese un mail valido");
+            throw new MyException("please insert email valid");
         }
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity user = userRepo.findByEmail(email);
+        Optional<UserEntity> response = userRepo.findByEmail(email);
+        UserEntity user = response.get();
 
         if(user != null){
 
