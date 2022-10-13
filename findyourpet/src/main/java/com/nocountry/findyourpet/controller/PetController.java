@@ -34,9 +34,9 @@ public class PetController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> modifyPet(@PathVariable Long petId, @RequestBody PetRequest petRequest){
+    public ResponseEntity<?> modifyPet(@PathVariable Long id, @RequestBody PetRequest petRequest){
         try {
-            return petService.modify(petRequest , petId);
+            return petService.modify(petRequest , id);
         } catch (MyException e) {
             System.out.println(e.getMessage());
             return null;

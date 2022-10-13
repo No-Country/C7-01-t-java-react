@@ -42,7 +42,6 @@ public class PetService {
     @Transactional
     public ResponseEntity<?> modify(PetRequest petRequest,Long idPet) throws MyException {
         validation(petRequest);
-        //se busca si la mascota esta en la base de datos
         Optional<PetEntity> response = petRepo.findById(idPet);
         if (response.isPresent()){
             PetEntity pe = response.get();
